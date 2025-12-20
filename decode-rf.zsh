@@ -21,7 +21,7 @@ vhs-decode --debug --tape_format video8 --frequency 40 --system pal --ire0_adjus
 # -------------------------------------------------------------------
 # 2. HIFI AUDIO DECODE (hard timeout: 3 hours = 10800 s)
 # -------------------------------------------------------------------
-timeout 10800 hifi-decode -t 8 -p -f 40 --audio_rate 48000 --8mm "$BASENAME.flac" "hifi_audio_$BASENAME.flac"
+timeout 10800 hifi-decode -t 8 -p -f 40 --audio_rate 48000 --8mm "$BASENAME.flac" "hifi_audio_$BASENAME.flac" || true
 # hifi-decode does not return --> timeout is used
 
 # -------------------------------------------------------------------
