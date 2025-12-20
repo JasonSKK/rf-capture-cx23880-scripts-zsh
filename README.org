@@ -15,7 +15,7 @@ capture-rf-flac.zsh /path/to/capture-40msps-8bit-cx-card.flac
    #+end_src
 3. vhs-decode video + hifi + vhs-decode-auto-audio-align + tbc-video-export FFV1 video coding, MATROSKA containter
    #+begin_src
-decode-rf.zsh /path/to/capture-40msps-8bit-cx-card.flac /path/to/capture-40msps-8bit-cx-card
+. decode-rf.zsh /path/to/capture-40msps-8bit-cx-card.flac /path/to/capture-40msps-8bit-cx-card
    #+end_src
 
 *Note:* This repo is for my personal use / archiving. Therefore adaption on paths is required if your are attempting to reuse.
