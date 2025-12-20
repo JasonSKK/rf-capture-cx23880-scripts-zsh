@@ -1,0 +1,38 @@
+#+TITLE: rf-capture-cx23880-scripts-zsh
+#+AUTHOR: Iason SK
+
+* Description
+
+This repo contains ZSH scripts for RF capture (video8 / 8mm) via the vhs-decode project for the follwing operations:
+
+1. CX auto level calibration
+   #+begin_src
+. cx-calibrate.zsh
+   #+end_src
+2. FLAC RF capture
+   #+begin_src
+capture-rf-flac.zsh /path/to/capture-40msps-8bit-cx-card.flac
+   #+end_src
+3. vhs-decode video + hifi + vhs-decode-auto-audio-align + tbc-video-export HEVC x265 (MP4)
+   #+begin_src
+decode-rf.zsh /path/to/capture-40msps-8bit-cx-card.flac /path/to/capture-40msps-8bit-cx-card
+   #+end_src
+
+*Note:* This repo is for my personal use / archiving. Therefore adaption on paths is required if your are attempting to reuse.
+
+* HW dependencies
+a. [[https://github.com/oyvindln/vhs-decode/wiki/CX-Cards#crystal-mod---5-25usd][Crystal mod 40MHz for 40msps 8-bit capture]]
+b. [[https://github.com/oyvindln/vhs-decode/wiki/CX-Cards#cooling-mod][Cooling mod: Heatsink + Fan mod (At 40Mhz chip gets hot and frames are dropped. You've been warned!)]]
+c. [[https://de.aliexpress.com/item/1005004394809131.html?aff_fcid=555eff6335ff442aab672b6fea2e7a3a-1752516809334-07431-_DBDAGXp&tt=CPS_NORMAL&aff_fsk=_DBDAGXp&aff_platform=shareComponent-detail&sk=_DBDAGXp&aff_trace_key=555eff6335ff442aab672b6fea2e7a3a-1752516809334-07431-_DBDAGXp&terminal_id=8468523680124c75945a6be79bae62d6&afSmartRedirect=y&gatewayAdapt=glo2deu][BNC auf DuPont-Kabel]]
+d. [[https://github.com/oyvindln/vhs-decode/wiki/CX-Cards#c31-removal][Capacitor 31 removal]]
+e. [[https://github.com/oyvindln/vhs-decode/wiki/CX-Cards#rca-to-bnc-replacement][RCA to BNC replacement]]
+d. EV-S1000 or some other easily tap-able player
+
+[[./cx-mods_251220.jpg]]
+[[./cx-pci-setup-evs1000.jpg]]
+
+* Referencing projects used in the scripts
+
+a. https://github.com/oyvindln/vhs-decode/
+b. https://gitlab.com/wolfre/vhs-decode-auto-audio-align
+c. https://github.com/happycube/cxadc-linux3/
