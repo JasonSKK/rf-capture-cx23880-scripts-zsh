@@ -37,4 +37,5 @@ ffmpeg -hide_banner -loglevel error -i "hifi_audio_$BASENAME.flac" -af "pan=mono
 # -------------------------------------------------------------------
 # 5. VIDEO + AUDIO EXPORT
 # -------------------------------------------------------------------
-tbc-video-export --profile x265 --audio-track "aligned_hifi_audio_$BASENAME.flac" "$BASENAME.tbc"
+# ~60GB / 1 hour
+tbc-video-export --audio-track "aligned_hifi_audio_$BASENAME.flac" "$BASENAME.tbc"
