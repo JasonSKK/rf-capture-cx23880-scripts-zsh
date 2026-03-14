@@ -6,21 +6,21 @@ if [[ $# -ne 1 ]]; then
   return 1 2>/dev/null || exit 1
 fi
 
-# print -n "Is there > 380GB available space on the drive ? If yes press Enter to continue"
-# read
+print -n "Is there > 380GB available space on the drive ? If yes press Enter to continue"
+read
 
-# print -n "all read/writes should happen in the same disk the OS uses, otherwise there is timebase droppout risk"
-# read
+print -n "all read/writes should happen in the same disk the OS uses, otherwise there is timebase droppout risk"
+read
 
 RF="$1"
 # os ssd needs to be used
 OS_PATH="/home/iason1/temp/test-capture"
 
 RF_BASENAME="$(basename -- "$RF")"
-STEM="${RF_BASENAME%.flac}"          # remove one .flac suffix if present
+STEM="${RF_BASENAME%.flac}" # remove one .flac suffix if present
 
-OUT_BASE="${OS_PATH}/${STEM}"        # base path for vhs-decode outputs
-HIFI_BASE="${OS_PATH}/hifi_audio_${STEM}"   # base name for hifi-decode outputs (no .flac)
+OUT_BASE="${OS_PATH}/${STEM}" # base path for vhs-decode outputs
+HIFI_BASE="${OS_PATH}/hifi_audio_${STEM}" # base name for hifi-decode outputs (no .flac)
 ALIGNED_FLAC="${OS_PATH}/aligned_hifi_audio_${STEM}.flac"
 
 [[ -f "$RF" ]] || { echo "RF not found: $RF" >&2; exit 1; }
@@ -34,10 +34,9 @@ ALIGNED_FLAC="${OS_PATH}/aligned_hifi_audio_${STEM}.flac"
 # Drop --recheck_phase unless you have a specific reason. It is extra wor
 # -------------------------------------------------------------------
 # vhs-decode --tape_format video8 --frequency 40 --system pal --no_resample --use_saved_levels --level_detect_divisor 6 --ire0_adjust "$RF" "$OUT_BASE"
-vhs-decode --debug --tape_format video8 --frequency 40 --system pal --ire0_adjust --recheck_phase --recheck_phase "$RF" "$OUT_BASE"
 
-# old
-# vhs-decode --debug --tape_format video8 --frequency 40 --system pal --ire0_adjust --recheck_phase "$RF" "$OUT_PATH"
+# Standardised according to docs
+vhs-decode --debug --tape_format video8 --frequency 40 --system pal --ire0_adjust --recheck_phase "$RF" "$OUT_BASE"
 
 # -------------------------------------------------------------------
 # 2. HIFI AUDIO DECODE (hard timeout: 3 hours = 10800 s)
@@ -45,10 +44,11 @@ vhs-decode --debug --tape_format video8 --frequency 40 --system pal --ire0_adjus
 # hifi-decode -p -f 40 --audio_rate 48000 --8mm "$OUT_PATH.flac" "hifi_audio_$OUT_PATH.flac"
 # hifi-decode does not return --> timeout is used
 
+# 3 hrs, reasonable for long tapes 90min
 TIMEOUT_SEC=10800
 
 set +e
-timeout --signal=TERM --kill-after=30s "${TIMEOUT_SEC}s" hifi-decode -p -f 40 --audio_rate 48000 --8mm "$RF" "$HIFI_BASE.flac"
+timeout --signal=TERM --kill-after=30s "${TIMEOUT_SEC}s" hifi-decode -f 40 --audio_rate 48000 --8mm "$RF" "$HIFI_BASE.flac"
 rc=$?
 set -e
 
@@ -59,18 +59,20 @@ case "$rc" in
     *)   echo "hifi-decode failed with exit code $rc" >&2; exit "$rc" ;;
 esac
 
-
 # -------------------------------------------------------------------
 # 3. AUDIO ALIGN
 # -------------------------------------------------------------------
 ffmpeg -hide_banner -loglevel error -i "${HIFI_BASE}.flac" -af "pan=mono|c0=FL" -f s24le -ac 1 - | mono ~/bin/vhs-decode-auto-audio-align_1.0.0/VhsDecodeAutoAudioAlign.exe stream-align --sample-size-bytes 3 --stream-sample-rate-hz 48000 --json "$OUT_BASE.tbc.json" --rf-video-sample-rate-hz 40000000 | ffmpeg -hide_banner -loglevel error -fflags +bitexact -f s24le -ar 48000 -ac 1 -i - -sample_fmt s32 "$ALIGNED_FLAC"
 
+# This is a personal option due to limited space.  I am moving the RF capture ".flac" to an external HDD to mitigate running out of storage
+# mv -vn "$RF" ~/rf-capture/completed/
+
 # -------------------------------------------------------------------
 # 4. VIDEO + AUDIO EXPORT
 # -------------------------------------------------------------------
 # ~60GB / 1 hour
-tbc-video-export --audio-track "$ALIGNED_FLAC" "${OUT_BASE}.tbc"
+tbc-video-export --chroma-gain 1.5 --audio-track "$ALIGNED_FLAC" "${OUT_BASE}.tbc"
 
 echo
 echo "Workflow finished. Press Enter to exit."
-read -r
+read -r # comment out for unattended
