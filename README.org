@@ -9,16 +9,16 @@ This repo contains ZSH + bash scripts for RF capture (video8 / 8mm) at 40MHz/40M
    #+begin_src
 source cx-calibrate.zsh
    #+end_src
-2. FLAC RF capture, zsh script
+2. FLAC RF capture, zsh script, set timeout in minutes. Check if tape 60/90 min and set accordingly.
    #+begin_src
-zsh capture-rf-flac.zsh /path/to/capture-40msps-8bit-cx-card.flac
+zsh capture-rf-flac.zsh /path/to/capture-40msps-8bit-cx-card.flac 95
    #+end_src
 3. vhs-decode video + hifi + vhs-decode-auto-audio-align + tbc-video-export FFV1 video coding, MATROSKA containter, this is a bash script --> just execute
    #+begin_src
 ~/scripts/rf/decode-rf.sh /path/to/capture-40msps-8bit-cx-card.flac
    #+end_src
 
-*Note:* This repo is for my personal use / archiving. Therefore adaption on paths is required if your are attempting to reuse.
+*Note:* This repo is for my personal use / archiving. Therefore adaption on paths and logic is required if your are attempting to reuse.
 
 * HW dependencies
 1. [[https://github.com/oyvindln/vhs-decode/wiki/CX-Cards#crystal-mod---5-25usd][Crystal mod 40MHz for 40msps 8-bit capture]]
@@ -26,7 +26,7 @@ zsh capture-rf-flac.zsh /path/to/capture-40msps-8bit-cx-card.flac
 3. [[https://de.aliexpress.com/item/1005004394809131.html?aff_fcid=555eff6335ff442aab672b6fea2e7a3a-1752516809334-07431-_DBDAGXp&tt=CPS_NORMAL&aff_fsk=_DBDAGXp&aff_platform=shareComponent-detail&sk=_DBDAGXp&aff_trace_key=555eff6335ff442aab672b6fea2e7a3a-1752516809334-07431-_DBDAGXp&terminal_id=8468523680124c75945a6be79bae62d6&afSmartRedirect=y&gatewayAdapt=glo2deu][BNC auf DuPont-Kabel]]
 4. [[https://github.com/oyvindln/vhs-decode/wiki/CX-Cards#c31-removal][Capacitor 31 removal]]
 5. [[https://github.com/oyvindln/vhs-decode/wiki/CX-Cards#rca-to-bnc-replacement][RCA to BNC replacement]]
-6. EV-S1000 or some other easily tap-able player
+6. EV-S1000 or some other easily tap-able player (or not if you like adventure ;-) )
 
 [[./cx-mods_251220.jpg]]
 [[./cx-pci-setup-evs1000.jpg]]
