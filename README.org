@@ -3,15 +3,18 @@
 
 * Description
 
-This repo contains ZSH + bash scripts for RF capture (video8 / 8mm) at 40MHz/40MSPS via the vhs-decode project for the follwing operations:
+This repo contains ZSH + bash scripts for RF capture (video8 and VHS) at 40MHz/40MSPS via the vhs-decode project for the follwing operations:
 
 1. CX auto level calibration, zsh script
-   #+begin_src
+   #+begin_src     
 source cx-calibrate.zsh
    #+end_src
 2. FLAC RF capture, zsh script, set timeout in minutes. Check if tape 60/90 min and set accordingly.
    #+begin_src
-zsh capture-rf-flac.zsh /path/to/capture-40msps-8bit-cx-card.flac 95
+# video8
+zsh capture-rf-flac.zsh /path/to/capture-40msps-8bit-cx-card.flac 95 # hifi audio signal embedded into the single physical channel RF
+# VHS     
+zsh capture-rf-vhs-flac.zsh /path/to/capture-40msps-8bit-cx-card.flac 185 # requires edits for linear/analog audio capture (non RF/HIFI), I am using an external audio interface
    #+end_src
 3. vhs-decode video + hifi + vhs-decode-auto-audio-align + tbc-video-export FFV1 video coding, MATROSKA containter, this is a bash script --> just execute
    #+begin_src
@@ -27,9 +30,13 @@ zsh capture-rf-flac.zsh /path/to/capture-40msps-8bit-cx-card.flac 95
 4. [[https://github.com/oyvindln/vhs-decode/wiki/CX-Cards#c31-removal][Capacitor 31 removal]]
 5. [[https://github.com/oyvindln/vhs-decode/wiki/CX-Cards#rca-to-bnc-replacement][RCA to BNC replacement]]
 6. EV-S1000 or some other easily tap-able player (or not if you like adventure ;-) )
-
+   
 [[./cx-mods_251220.jpg]]
 [[./cx-pci-setup-evs1000.jpg]]
+
+
+WARNING: For VHS capture it is expected that the audio is captured in the linear/analogue domain (Non RF/HIFI) via crocodile clips leading to the input of a sound card. The capture script requires editing for specifying the audio interface, or complete removal+addition of HIFI capture channel.
+[[./sony-slvse60-full-capture-pb-rf-analog-audio.jpg]]
 
 * Referencing projects used in the scripts
 
